@@ -14,11 +14,10 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
     public function index(){
       return Auth::check() ? view('home.index') : redirect('/login');
       // return view('home.index');
     }
-
 }
