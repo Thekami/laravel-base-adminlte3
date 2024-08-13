@@ -25,3 +25,4 @@ Homestead.json
 public/.DS_Store
 public/plugins/.DS_Store
 resources/.DS_Store
+.vscode/launch.json
