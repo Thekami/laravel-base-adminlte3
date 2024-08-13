@@ -6,6 +6,18 @@
 
 @section('content')
 
+{{-- {{ dd(session()->getId(), request()->cookie('laravel_session'), Illuminate\Support\Facades\Request::cookie('laravel_session'), \Session::all(), \Auth::user()->id)  }} --}}
+
+{{-- @php
+  $user = \User::findOrFail($userId);
+
+  // Obtén el token activo del usuario
+  $tokenModel = $user->tokens()->latest()->first();
+  dd($tokenModel);
+@endphp  --}}
+@auth
+  <h1>Hola {{ \Auth::user()->name }}</h1>
+@endauth
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
