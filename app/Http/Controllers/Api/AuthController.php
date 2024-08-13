@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Traits\ResponseTrait;
 
 use App\Models\User;
-use App\Models\ErrorLog;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
@@ -39,18 +38,10 @@ class AuthController extends Controller
     }
 
     public function login(LoginRequest $request){
-        
+    
         try {
-            $credentials = ['password' => $request->password];
-
-            // Check if user field contains an email or username
-            $field = filter_var($request->user, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-            // Make a credentials array
-            $credentials = [
-                $field => $request->user,
-                'password' => $request->password,
-            ];
+            
+            $credentials = $request->getCredentials();
 
             // Validate credentials
             if(Auth::attempt($credentials)){
@@ -68,20 +59,20 @@ class AuthController extends Controller
             }
         } catch (Exception $e) {
             return $this->catchError(Auth::id(), $e, $this->controller, 'login');
-        }
+        }   
     }
 
-    protected function catchError($user_id, $error, $controller, $method){
+    // protected function catchError($user_id, $error, $controller, $method){
 
-        $this->env = config('app.env');
+    //     $this->env = config('app.env');
         
-        // Send error to error_logs table
-        $ErrorLog = new ErrorLog();
-        $ErrorLog->saveErrorLog($user_id, $controller, $method, $error);
+    //     // Send error to error_logs table
+    //     $ErrorLog = new ErrorLog();
+    //     $ErrorLog->saveErrorLog($user_id, $controller, $method, $error);
         
-        // Validate if send error to end user or not
-        return $this->env == 'local' 
-            ? $this->responseError($error->getMessage()) 
-            : $this->responseError();
-    }
+    //     // Validate if send error to end user or not
+    //     return $this->env == 'local' 
+    //         ? $this->responseError($error->getMessage()) 
+    //         : $this->responseError();
+    // }
 }
