@@ -28,7 +28,7 @@ class LoginRequest extends ApiRequest
         ];
     }
 
-    public function getCredentials(){
+    public function getCredentials(): array{
         $credentials = ['password' => $this->password];
 
         // Check if user field contains an email or username
@@ -43,7 +43,7 @@ class LoginRequest extends ApiRequest
         return $credentials;
     }
 
-    private function isEmail($value){
+    private function isEmail($value): bool{
         $factory = $this->container->make(ValidationFactory::class);
         return !$factory->make(['user'=>$value], ['user', 'email'])->fails();
     }

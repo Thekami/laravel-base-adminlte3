@@ -13,6 +13,7 @@ use App\Http\Requests\LoginRequest;
 
 use Auth;
 use Exception;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -21,23 +22,23 @@ class AuthController extends Controller
     public $env;
     protected $controller = "AuthController";
 
-    public function register(RegisterRequest $request){
+    public function register(RegisterRequest $request): Response{
         try {
-            $user = User::create([
+            $user = User::create(attributes: [
                 'name'     => $request->name,
                 'email'    => $request->email,
                 'username' => $request->username,
-                'password' => \Hash::make($request->password)
+                'password' => \Hash::make(value: $request->password)
             ]);
         
-            return $this->responseCreated($user);
+            return $this->responseCreated(data: $user);
 
         } catch (Exception $e) {
             return $this->catchError(Auth::id(), $e, $this->controller, 'register');
         }
     }
 
-    public function login(LoginRequest $request){
+    public function login(LoginRequest $request): Response {
     
         try {
             
@@ -62,17 +63,4 @@ class AuthController extends Controller
         }   
     }
 
-    // protected function catchError($user_id, $error, $controller, $method){
-
-    //     $this->env = config('app.env');
-        
-    //     // Send error to error_logs table
-    //     $ErrorLog = new ErrorLog();
-    //     $ErrorLog->saveErrorLog($user_id, $controller, $method, $error);
-        
-    //     // Validate if send error to end user or not
-    //     return $this->env == 'local' 
-    //         ? $this->responseError($error->getMessage()) 
-    //         : $this->responseError();
-    // }
 }

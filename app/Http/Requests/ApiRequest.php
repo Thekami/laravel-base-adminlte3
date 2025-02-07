@@ -17,7 +17,7 @@ class ApiRequest extends Request
 	 *
 	 * @return array
 	 */
-	public function sanitize()
+	public function sanitize(): array
 	{
 		$input['user_id'] = !is_null(\Auth::user()) ? \Auth::user()->id : null;
         $this->merge($input);
@@ -25,7 +25,7 @@ class ApiRequest extends Request
         return $this->all();
 	}
 
-    protected function formatErrors(Validator $validator)
+    protected function formatErrors(Validator $validator): array
 	{
 		return [
             'success' => false,
@@ -42,7 +42,7 @@ class ApiRequest extends Request
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function failedValidation(Validator $validator)
+    protected function failedValidation(Validator $validator): never
     {
         throw new HttpResponseException(
             response($this->formatErrors($validator), self::HTTP_UNPROCESSABLE_ENTITY)

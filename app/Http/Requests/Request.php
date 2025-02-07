@@ -13,7 +13,7 @@ abstract class Request extends FormRequest
      */
     protected $sanitized;
 
-    public function validator($factory)
+    public function validator($factory): mixed
     {
         return $factory->make(
             $this->sanitizeInput(), $this->container->call([$this, 'rules']), $this->messages()
@@ -25,7 +25,7 @@ abstract class Request extends FormRequest
      *
      * @return array
      */
-    protected function sanitizeInput()
+    protected function sanitizeInput(): mixed
     {
         if (method_exists($this, 'sanitize'))
         {
@@ -41,7 +41,7 @@ abstract class Request extends FormRequest
      * @param  mixed   $default
      * @return mixed
      */
-    public function sanitized($key = null, $default = null)
+    public function sanitized($key = null, $default = null): mixed
     {
         $input = is_null($this->sanitized) ? $this->all() : $this->sanitized;
         return array_get($input, $key, $default);

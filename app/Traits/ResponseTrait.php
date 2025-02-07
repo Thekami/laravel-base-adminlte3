@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Traits;
-use \Symfony\Component\HttpFoundation\Response;
+// use \Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 trait ResponseTrait
 {
@@ -10,37 +12,37 @@ trait ResponseTrait
     private $notFoundMsg = "Recuerso no encontrado";
     private $UnautorizedMsg = "Acceso denegado";
 
-    private function responseCreated($data = []){
+    private function responseCreated($data = []): Response{
         return response([
             'success' => true,
             'data' => $data
-        ], Response::HTTP_CREATED);
+        ], HttpResponse::HTTP_CREATED);
     }
 
-    private function responseOk($data = []){
+    private function responseOk($data = []): Response{
         return response([
             'success' => true,
             'data' => $data,
-        ], Response::HTTP_OK);
+        ], HttpResponse::HTTP_OK);
     }
 
-    private function responseNotFound($message = null){
+    private function responseNotFound($message = null): Response{
         return response([
             'success' => true,
             'message' => is_null($message) ? $this->notFoundMsg : $message,
             'data' => [],
-        ], Response::HTTP_NOT_FOUND);
+        ], HttpResponse::HTTP_NOT_FOUND);
     }
 
-    private function responseUnautorized($message = null){
+    private function responseUnautorized($message = null): Response{
         return response([
             'success' => true,
             'message' => is_null($message) ? $this->UnautorizedMsg : $message,
             'data' => [],
-        ], Response::HTTP_UNAUTHORIZED);
+        ], HttpResponse::HTTP_UNAUTHORIZED);
     }
 
-    private function responseError($error = '', $message = null, $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR)
+    private function responseError($error = '', $message = null, $statusCode = HttpResponse::HTTP_INTERNAL_SERVER_ERROR): Response
     {
         return response([
             'success' => false,
@@ -49,7 +51,7 @@ trait ResponseTrait
         ], $statusCode);
     }
 
-    private function responseSuccess($data = [], $statusCode = Response::HTTP_OK)
+    private function responseSuccess($data = [], $statusCode = HttpResponse::HTTP_OK): Response
     {
         return response([
             'success' => true,
@@ -57,7 +59,7 @@ trait ResponseTrait
         ], $statusCode);
     }
 
-    private function catchError($user_id, $error, $controller, $method){
+    private function catchError($user_id, $error, $controller, $method): Response{
 
         $env = config('app.env');
 

@@ -5,18 +5,20 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Session;
+use Illuminate\View\View;
 use Auth;
 
 class LoginController extends Controller
 {
-    public function show(){
+    public function show(): View {
         return Auth::check() ? redirect('/home') : view('auth.login');
     }
 
-    public function login(LoginRequest $request){
+    public function login(LoginRequest $request): RedirectResponse {
         
         // Login usgin Auth API Controller
         $auth = new AuthController();
@@ -38,14 +40,14 @@ class LoginController extends Controller
 
         return redirect('/home');
     }
-  
-    public function logout(){
+
+    public function logout(): RedirectResponse{
         Session::flush(); // Delete all session variables
         Auth::logout(); 
         return redirect('/login');
     }
 
-    public function impersonateUser($userId){
+    public function impersonateUser($userId): RedirectResponse{
         
         $user = User::findOrFail($userId);
 
@@ -65,7 +67,7 @@ class LoginController extends Controller
         return redirect('/panel')->with('message', 'You are now impersonating ' . $user->name);
     }
 
-    public function stopImpersonating(){
+    public function stopImpersonating(): RedirectResponse{
         // Delete sessión 
         session()->forget('impersonate_token');
 
