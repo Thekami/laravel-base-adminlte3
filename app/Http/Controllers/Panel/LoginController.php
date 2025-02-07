@@ -4,47 +4,54 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Traits\ResponseTrait;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use Auth;
+use Illuminate\Http\Response;
 
 class LoginController extends Controller
 {
+    use ResponseTrait;
+
+    public $env;
+    protected $controller = "LoginController";
+
     public function show(): View {
-        return Auth::check() ? redirect('/home') : view('auth.login');
+        return view('auth.login');
     }
 
-    public function login(LoginRequest $request): RedirectResponse {
-        
-        // Login usgin Auth API Controller
-        $auth = new AuthController();
-        $res  = $auth->login($request);
-        $data = json_decode($res->getContent());
-
-        // Validate response
-        if($res->status() == 200 && $data->success == true){
-
+    public function login(LoginRequest $request): mixed{
+        try {
             $credentials = $request->getCredentials(); // Formating credentials usgin the original request
-            $user        = Auth::getProvider()->retrieveByCredentials($credentials); // ??
+            
+            // Validate credentials 
+            if(Auth::attempt($credentials)){
 
-            Session::put('api_token', $data->data->access_token); // Put token as session variale
-            Auth::login($user);
-        }
-        else{
-            return redirect()->to('/login')->withErrors('auth.failed');
-        }
+                $user = Auth::getProvider()->retrieveByCredentials($credentials); // Generate user from credentials
+                Auth::login($user);
 
-        return redirect('/home');
+                return redirect('/home'); // Redirect to home page
+            }
+            else{
+                return redirect()->to('/login')->withErrors('auth.failed'); // Redirect to login page with error
+            }
+
+        } catch (Exception $e) {
+            return $this->catchError(Auth::id(), $e, $this->controller, 'login'); // Catch error
+        }  
     }
 
     public function logout(): RedirectResponse{
         Session::flush(); // Delete all session variables
-        Auth::logout(); 
-        return redirect('/login');
+        Auth::logout(); // Logout
+        return redirect('/login'); // Redirect to login page
     }
 
     public function impersonateUser($userId): RedirectResponse{

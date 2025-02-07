@@ -1,16 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
-
 use App\Http\Controllers\Controller;
 use App\Traits\ResponseTrait;
-
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
-
 use Auth;
 use Exception;
 use Illuminate\Http\Response;
