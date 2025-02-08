@@ -17,8 +17,7 @@ class HomeController extends Controller
     {
         // $this->middleware('auth');
     }
-    public function index(){
+    public function index(): mixed{
       return Auth::check() ? view('home.index') : redirect('/login');
-      // return view('home.index');
     }
 }

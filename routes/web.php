@@ -3,9 +3,10 @@
 use App\Http\Controllers\Panel\HomeController;
 use App\Http\Controllers\Panel\LoginController;
 use App\Http\Controllers\Panel\RegisterController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/', [HomeController::class, 'index']);
 
 // Guest routes
 Route::middleware(['guest'])->group(function () {
@@ -17,7 +18,7 @@ Route::middleware(['guest'])->group(function () {
 
 // Auth routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home.index');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
